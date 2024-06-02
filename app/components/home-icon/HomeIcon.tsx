@@ -1,14 +1,20 @@
 
 import React from 'react'
+import Image from 'next/image'
+import Link from 'next/link'
 
 export const HomeIcon = () => {
-    
-    const controllerImagePath = '../../images/controller.jpeg'
 
   return (
-    <div>
-        <img src={require(controllerImagePath)} alt='homeIcon' className='w-full h-full'/>
-    </div>
+    <Link
+    href={"/"}>
+      <Image
+        src="/images/controller.jpeg"
+        alt="Home Icon"
+        width={180}
+        height={37}
+      />
+    </Link>
   )
 }
 

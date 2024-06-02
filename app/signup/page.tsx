@@ -29,7 +29,7 @@ export default function Page() {
 
     return (
         <div>
-            <NavBar links={testNavs}/>
+            <NavBar links={testNavs} loggedIn={false}/>
             Signup Page!
             {/* <Form title="Signup for an account here!" onSubmit={submitHandler}/> */}
         </div>

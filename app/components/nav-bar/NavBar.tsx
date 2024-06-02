@@ -1,3 +1,4 @@
+'use client'
 
 import React from 'react'
 import { NavProps } from './NavProps'
@@ -6,15 +7,19 @@ import { LinkItem } from '@/app/interfaces/LinkItem'
 import Link from 'next/link'
 
 export const NavBar = ({
-    links
+    links,
+    loggedIn
 }: NavProps) => {
 
+    const [navLinks, setNavLinks] = React.useState<LinkItem[]>(links);
+    const [isLoggedIn, setIsLoggedIn] = React.useState<boolean>(loggedIn);
+
   return (
-    <div className='flex w-full h-1/6 bg-gray-400 bottom-4 justify-evenly align-middle'>
-        <div className='flex w-1/6 h-full justify-center'>
+    <div className='flex w-full h-1/6 bottom-4 bg-gray-300 justify-evenly align-middle'>
+        <div className='flex w-1/6 h-full items-center'>
             <HomeIcon/>
         </div>
-        <div className='flex w-4/6 h-full justify-evenly'>
+        <div className='flex w-4/6 h-full justify-evenly items-center'>
             {
                 SortLinks(links).map((link: LinkItem) => {
                     return NavBarItem(link)
