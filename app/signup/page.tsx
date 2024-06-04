@@ -6,6 +6,7 @@ import { LinkItem } from "../interfaces/LinkItem";
 import { useState } from "react";
 import { Modal } from "../components/modal/Modal";
 import { InfoPage } from "../components/info-page/InfoPage";
+import React from "react";
 
 
 export default function Page({}) {
@@ -37,6 +38,9 @@ export default function Page({}) {
             priority: 2
         }
     ];
+
+    // constants
+    const passwordMinLength = 8;
 
     // Form submit handler
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -106,7 +110,13 @@ export default function Page({}) {
                                 required
                             />
                         </div>
-                        <div className="flex items-center flex-row mt-4">
+                        <div className="flex justify-center align-middle">
+                            <span className="pr-4">
+                                {password.length >= passwordMinLength ? <>&#x2713;</> : <span>&#10005;</span>}
+                            </span>
+                            {`Password must be at least ${passwordMinLength} characters`}
+                        </div>
+                        <div className="flex items-center flex-row">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-6 mr-2">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 5.25a3 3 0 0 1 3 3m3 0a6 6 0 0 1-7.029 5.912c-.563-.097-1.159.026-1.563.43L10.5 17.25H8.25v2.25H6v2.25H2.25v-2.818c0-.597.237-1.17.659-1.591l6.499-6.499c.404-.404.527-1 .43-1.563A6 6 0 1 1 21.75 8.25Z" />
                             </svg>
