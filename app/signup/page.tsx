@@ -44,7 +44,24 @@ export default function Page({}) {
 
     // Form submit handler
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
 
+        // check email
+        if (!email.includes('@')) {
+            setFeedback('Invalid Email Address');
+            return;
+        }
+
+        // check password
+        if (password.length < passwordMinLength) {
+            setFeedback('Invalid Password Length');
+            return;
+        }
+
+        // verify code
+        // TODO: implement code
+
+        // submit form to db
     }
 
     return (
@@ -134,7 +151,7 @@ export default function Page({}) {
                             />
                         </div>
                         <div className="h-[2.5vh] flex justify-center align-middle">
-                            <span className="text-red-500">{feedback}</span>
+                            <span className="text-red-700">{feedback}</span>
                         </div>
                         <div className="flex justify-center">
                         <button type='submit'
@@ -146,7 +163,7 @@ export default function Page({}) {
                         </div>
                     </form>
                         <div className="mt-5">
-                            <Link href="/login" className="underline" >Login</Link>
+                            <Link href="/login" className="underline">Login</Link>
                             <button className="flex float-right text-sm text-primary hover:underline sm:text-base"
                             onClick={() => setShowModal(prev => !prev)}>
                                 Verification Code?

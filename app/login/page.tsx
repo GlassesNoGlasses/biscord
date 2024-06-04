@@ -34,7 +34,8 @@ export default function Page() {
 
     // Form submit handler
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-
+        event.preventDefault();
+        
     }
 
     return (
@@ -85,7 +86,7 @@ export default function Page() {
                             />
                         </div>
                         <div className="h-[2.5vh] flex justify-center align-middle">
-                            <span className="text-red-500">{feedback}</span>
+                            <span className="text-red-700">{feedback}</span>
                         </div>
                         <div className="flex justify-center">
                         <button type='submit'
