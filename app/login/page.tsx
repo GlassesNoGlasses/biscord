@@ -84,8 +84,8 @@ export default function Page() {
                                 required
                             />
                         </div>
-                        <div className="feedback-container" style={{ height: '2.5vh', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                            <span className="input-feedback" style={{ color: 'red' }}>{feedback}</span>
+                        <div className="h-[2.5vh] flex justify-center align-middle">
+                            <span className="text-red-500">{feedback}</span>
                         </div>
                         <div className="flex justify-center">
                         <button type='submit'
@@ -95,13 +95,13 @@ export default function Page() {
                             Log In
                         </button>
                         </div>
-                        <div className="form-footer-container" style={{ marginTop: '5%' }}>
-                            <Link href="/signup" className="underline" style={{ textDecoration: 'underline' }}>Sign Up</Link>
-                            <a role="button" className="forgot-password text-sm text-primary hover:underline sm:text-base " style={{ display: 'flex', float: 'right' }}>
+                    </form>
+                        <div className="mt-5">
+                            <Link href="/signup" className="underline">Sign Up</Link>
+                            <a role="button" className="flex float-right text-sm text-primary hover:underline sm:text-base">
                                 Forgot password?
                             </a>
                         </div>
-                    </form>
                 </div>
 		    </div>
         </div>

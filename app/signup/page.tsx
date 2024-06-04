@@ -123,8 +123,8 @@ export default function Page({}) {
                                 required
                             />
                         </div>
-                        <div className="feedback-container" style={{ height: '2.5vh', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                            <span className="input-feedback" style={{ color: 'red' }}>{feedback}</span>
+                        <div className="h-[2.5vh] flex justify-center align-middle">
+                            <span className="text-red-500">{feedback}</span>
                         </div>
                         <div className="flex justify-center">
                         <button type='submit'
