@@ -1,4 +1,110 @@
+'use client'
+
+import Link from "next/link";
+import { NavBar } from "../components/nav-bar/NavBar";
+import { LinkItem } from "../interfaces/LinkItem";
+import { useState } from "react";
+
 
 export default function Page() {
-    return <p>Login Page!</p>;
+
+    // Form States
+    const [username, setUsername] = useState('');
+	const [password, setPassword] = useState('');
+	const [feedback, setFeedback] = useState('');
+
+    // NavBar Links Test data
+    const testNavs: LinkItem[] = [
+        {
+            title: "Google",
+            href: "google.com",
+            priority: 1
+        },
+        {
+            title: "FaceBook",
+            href: "adsadasd",
+            priority: 2,
+        },
+        {
+            title: "instagram",
+            href: "asdadad",
+            priority: 2
+        }
+    ];
+
+    // Form submit handler
+    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+
+    }
+
+    return (
+        <div className="w-screen h-screen">
+            <div className="w-full h-fit">
+                <NavBar links={testNavs} loggedIn={false}/>
+            </div>
+            <div className="flex items-center justify-center">
+                <div 
+                    className="w-full h-5/6 mt-5 max-w-xs mx-auto bg-slate-400 rounded-xl
+                        sm:px-6 sm:py-8 md:max-w-sm lg:max-w-md xl:max-w-lg 2xl:max-w-xl flex flex-col gap-4
+            border-4 border-primary shadow-2xl shadow-black"
+                    style={{ boxShadow: '-10px 10px 30px 0 rgba(0, 0, 0, 0.1)' }}>
+                    <h3 className="text-xl font-bold text-center sm:text-2xl text-gray-700">Log in to your account</h3>
+                    <form className='flex flex-col gap-4' onSubmit={handleSubmit}>
+                        <div className="flex items-center flex-row mt-4">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6 mr-2">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-1.07 1.916l-7.5 4.615a2.25 2.25 0 0 1-2.36 0L3.32 8.91a2.25 2.25 0 0 1-1.07-1.916V6.75" />
+                            </svg>
+                            <input
+                                type="text"
+                                id="email"
+                                aria-label='email or username'
+                                placeholder="Enter email or username"
+                                value={username}
+                                onChange={(e) => setUsername(e.target.value)}
+                                className="form-input w-full px-3 py-2 mt-2 border border-gray-200 rounded-full focus:outline-none
+                                focus:ring focus:ring-slate-700 sm:px-4 sm:py-3 text-black"
+                                style={{ boxShadow: 'inset -4px 4px 6px rgba(0, 0, 0, 0.1)' }}
+                                required
+                            />
+                        </div>
+                        <div className="flex items-center flex-row mt-4">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-6 mr-2">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z" />
+                            </svg>
+                            <input
+                                type="password"
+                                id="password"
+                                aria-label='password'
+                                placeholder="Enter password"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                                className="form-input w-full px-3 py-2 mt-2 border border-gray-200 rounded-full focus:outline-none
+                                focus:ring focus:ring-slate-700 sm:px-4 sm:py-3 text-black"
+                                style={{ boxShadow: 'inset -4px 4px 6px rgba(0, 0, 0, 0.1)' }}
+                                required
+                            />
+                        </div>
+                        <div className="feedback-container" style={{ height: '2.5vh', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                            <span className="input-feedback" style={{ color: 'red' }}>{feedback}</span>
+                        </div>
+                        <div className="flex justify-center">
+                        <button type='submit'
+                            className='p-2 px-5 m-2 bg-slate-700 hover:bg-secondary
+                                text-white font-bold rounded-lg shadow-md transition-colors duration-150 ease-in
+                                text-base w-full'>
+                            Log In
+                        </button>
+                        </div>
+                        <div className="form-footer-container" style={{ marginTop: '5%' }}>
+                            <Link href="/signup" className="underline" style={{ textDecoration: 'underline' }}>Sign Up</Link>
+                            <a role="button" className="forgot-password text-sm text-primary hover:underline sm:text-base " style={{ display: 'flex', float: 'right' }}>
+                                Forgot password?
+                            </a>
+                        </div>
+                    </form>
+                </div>
+		    </div>
+        </div>
+    )
 }
+
