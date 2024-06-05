@@ -31,12 +31,14 @@ export const FriendList = ({
 
   return (
     <div className='flex overflow-y-auto flex-col w-full h-full bg-slate-400'>
-        <input
-        type='text'
-        placeholder='Search by username'
-        value={searchTerm}
-        onChange={handleSearchChange}
-        className='flex text-black text-sm w-11/12 justify-center'/>
+        <div className='flex w-full h-fit p-1 bg-slate-600'>
+            <input
+            type='text'
+            placeholder='Search by username'
+            value={searchTerm}
+            onChange={handleSearchChange}
+            className='flex w-full text-black text-sm justify-center rounded-lg'/>
+        </div>
             {
                 filteredUsers.map((friend: User) => {
                     return <UserIcon user={friend}/>

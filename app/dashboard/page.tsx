@@ -56,7 +56,7 @@ export default function Page() {
             <div className="w-full h-fit">
                 <NavBar links={[]}/>
             </div>
-            <div className="h-full w-1/3">
+            <div className="h-full w-1/4">
                 {
                     user ?
                     <FriendList friends={user.friends}/>
