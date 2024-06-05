@@ -1,18 +1,27 @@
 'use client'
 
-import React from 'react'
+import React, { useEffect } from 'react'
 import { NavProps } from './NavProps'
 import { HomeIcon } from '../home-icon/HomeIcon'
 import { LinkItem } from '@/app/interfaces/LinkItem'
 import Link from 'next/link'
+import UserController from '@/app/controllers/UserController'
 
 export const NavBar = ({
     links,
     loggedIn
 }: NavProps) => {
 
+    // navbar states
     const [navLinks, setNavLinks] = React.useState<LinkItem[]>(SortLinks(links));
-    const [isLoggedIn, setIsLoggedIn] = React.useState<boolean>(loggedIn);
+    const [isLoggedIn, setIsLoggedIn] = React.useState<boolean>(loggedIn ? true : false);
+
+    useEffect(() => {
+        // check if a user is already logged in
+        const user = UserController.getUser()
+
+        setIsLoggedIn(user !== null)
+    }, [])
 
   return (
     <div className='flex w-full h-full bottom-4 bg-slate-500 justify-evenly align-middle'>

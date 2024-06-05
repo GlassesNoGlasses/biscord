@@ -5,7 +5,7 @@ import { User } from "../interfaces/User";
 
 export default class UserController {
 
-    private static user: User;
+    private static user: User | null = null;
     
     // user logins
     static async loginUser(email: string, password: string) {
@@ -16,7 +16,8 @@ export default class UserController {
         UserController.user = {
             id: null, // null for now
             email: email,
-            password: password
+            username: "", // username is empty for now, will update after fetching
+            friends: [] // friends is empty for now, will update after fetching
         };
     };
 
@@ -26,9 +27,13 @@ export default class UserController {
     };
 
     // get user information
-    static async getUser() {
+    static getUser() {
         return UserController.user;
     };
+
+    static setUser(user: User) {
+        UserController.user = user;
+    }
 
     // user logouts
     static async logoutUser() {
@@ -37,7 +42,8 @@ export default class UserController {
         UserController.user = {
             id: null,
             email: "",
-            password: ""
+            username: "",
+            friends: []
         };
     };
 }

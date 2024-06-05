@@ -2,5 +2,7 @@
 export interface User {
     id: number | null,
     email: string;
-    password: string;
+    username: string;
+    description?: string;
+    friends: User[];
 }
