@@ -50,6 +50,7 @@ export default function Page() {
     }, [])
 
     const [user, setUser] = useState<User | null>(null);
+    const [focusedUser, setFocusedUser] = useState<User | null>(null);
 
     return (
         <div className="h-screen w-screen">
@@ -59,9 +60,12 @@ export default function Page() {
             <div className="h-full w-1/4">
                 {
                     user ?
-                    <FriendList friends={user.friends}/>
+                    <FriendList friends={user.friends} handleSelect={(friend: User) => console.log(friend)}/>
                     : <></>
                 }
+            </div>
+            <div className="h-full w-3/4">
+
             </div>
         </div>
     )

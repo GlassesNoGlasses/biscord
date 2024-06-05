@@ -6,7 +6,8 @@ import { UserIcon } from '../user-icon/UserIcon'
 import { User } from '@/app/interfaces/User'
 
 export const FriendList = ({
-    friends
+    friends,
+    handleSelect
 }: FriendListProps) => {
 
     // states used
@@ -41,7 +42,7 @@ export const FriendList = ({
         </div>
             {
                 filteredUsers.map((friend: User) => {
-                    return <UserIcon user={friend}/>
+                    return <UserIcon user={friend} callback={() => handleSelect(friend)}/>
                 })
             }
     </div>
