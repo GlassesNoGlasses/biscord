@@ -50,8 +50,9 @@ export const ChatBox = ({
         placeholder={`Message @${receiver}`}
         className='flex w-full h-fit bg-slate-600 text-white rounded-lg p-2'
         onKeyDown={handleEnter}
+        onChange={handleTextChange}
         value={text}
-        onChange={handleTextChange}/>
+        />
     </div>
   )
 }

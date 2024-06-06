@@ -3,6 +3,7 @@ import React from 'react'
 import { ChatProps } from './ChatProps'
 import { ChatBox } from './chatbox/ChatBox'
 import { Message } from '@/app/interfaces/Message';
+import { MessageDisplay } from '../message-display/MessageDisplay';
 
 export const Chat = ({
     sessionID,
@@ -24,9 +25,17 @@ export const Chat = ({
   
 
   return (
-    <div className='flex flex-col h-full w-full justify-center'>
+    <div className='flex flex-col h-full w-full'>
       <div className='flex h-5/6 w-full bg-gray-700'>
-
+        <div className='flex flex-col h-full w-full justify-start align-bottom'>
+          {
+            messages.map((message, index) => {
+              return (
+                <MessageDisplay message={message} key={index}/>
+              )
+            })
+          }
+        </div>
       </div>
       <div className='flex h-1/6 w-full bg-slate-800 align-bottom justify-center'>
         <ChatBox
