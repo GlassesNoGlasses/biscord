@@ -27,7 +27,7 @@ export const Chat = ({
   return (
     <div className='flex flex-col h-full w-full'>
       <div className='flex h-5/6 w-full bg-gray-700'>
-        <div className='flex flex-col h-full w-full justify-start align-bottom'>
+        <div className='flex flex-col h-full w-full justify-start align-bottom overflow-auto'>
           {
             messages.map((message, index) => {
               return (
