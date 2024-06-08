@@ -31,8 +31,8 @@ export const FriendList = ({
     // magnifying glass icon &#x1F50D;
 
   return (
-    <div className='flex overflow-y-auto flex-col w-full h-full bg-slate-400'>
-        <div className='flex w-full h-fit p-1 bg-slate-600'>
+    <div className='flex overflow-y-auto flex-col w-full h-full bg-slate-600'>
+        <div className='flex w-full h-fit p-2 bg-slate-600 border-b-4 border-slate-800'>
             <input
             type='text'
             placeholder='Search by username'
