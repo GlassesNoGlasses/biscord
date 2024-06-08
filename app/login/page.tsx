@@ -4,6 +4,8 @@ import Link from "next/link";
 import { NavBar } from "../components/nav-bar/NavBar";
 import { LinkItem } from "../interfaces/LinkItem";
 import { useState } from "react";
+import UserController from "../controllers/UserController";
+import { User } from "../interfaces/User";
 
 
 export default function Page() {
@@ -36,6 +38,18 @@ export default function Page() {
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         
+        UserController.loginUser(username, password).then((res): User | Response | undefined => {
+            if (!res) {
+                setFeedback('Invalid Credentials');
+                return;
+            } else if (res instanceof Response) {
+                setFeedback('Server Error');
+                console.log(res);
+            } else {
+                console.log(res);
+            }
+        })
+
     }
 
     return (

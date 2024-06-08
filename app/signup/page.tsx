@@ -7,6 +7,7 @@ import { useState } from "react";
 import { Modal } from "../components/modal/Modal";
 import { InfoPage } from "../components/info-page/InfoPage";
 import React from "react";
+import UserController from "../controllers/UserController";
 
 
 export default function Page({}) {
@@ -14,7 +15,7 @@ export default function Page({}) {
     // Form States
     const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
-    const [code, setCode] = useState('');
+    const [authCode, setAuthCode] = useState('');
 	const [feedback, setFeedback] = useState('');
 
     // Verification Code State
@@ -60,6 +61,13 @@ export default function Page({}) {
 
         // verify code
         // TODO: implement code
+        UserController.signup(email, password, authCode).then((res: Response | undefined) => {
+            if (res?.ok) {
+                console.log('User Created');
+            } else {
+                console.log('Error Creating User');
+            }
+        });
 
         // submit form to db
     }
@@ -142,8 +150,8 @@ export default function Page({}) {
                                 id="code"
                                 aria-label='code'
                                 placeholder="Enter Verification Code"
-                                value={code}
-                                onChange={(e) => setCode(e.target.value)}
+                                value={authCode}
+                                onChange={(e) => setAuthCode(e.target.value)}
                                 className="form-input w-full px-3 py-2 mt-2 border border-gray-200 rounded-full focus:outline-none
                                 focus:ring focus:ring-slate-700 sm:px-4 sm:py-3 text-black"
                                 style={{ boxShadow: 'inset -4px 4px 6px rgba(0, 0, 0, 0.1)' }}

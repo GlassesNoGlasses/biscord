@@ -30,8 +30,8 @@ export const NavBar = ({
         </div>
         <div className='flex w-4/6 h-full justify-evenly align-middle'>
             {
-                navLinks.map((link: LinkItem) => {
-                    return NavBarItem(link)
+                navLinks.map((link: LinkItem, index: number) => {
+                    return NavBarItem(link, index)
                 })
             }
         </div>
@@ -56,9 +56,9 @@ const SortLinks = (links: LinkItem[]): LinkItem[]  => {
     })
 }
 
-const NavBarItem = (link: LinkItem): JSX.Element => {
+const NavBarItem = (link: LinkItem, index: number): JSX.Element => {
     return (
-        <Link href={link.href} className='flex h-full w-fit align-middle'>
+        <Link key={index} href={link.href} className='flex h-full w-fit align-middle'>
             {link.title}
         </Link>
     )
