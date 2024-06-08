@@ -9,6 +9,12 @@
 # testing
 /coverage
 
+# express backend
+/server/node_modules
+
+# TODO
+/TODO
+
 # next.js
 /.next/
 /out/
