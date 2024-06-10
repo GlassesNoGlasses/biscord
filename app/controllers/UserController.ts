@@ -1,34 +1,67 @@
 
 // Controls user information and actions
-
 import { User } from "../interfaces/User";
+import { LOCAL } from "../constants";
+import { LoginResponse } from "../interfaces/ServerResponse";
+import { cookies } from "next/headers";
 
 export default class UserController {
 
+    private static userCookie = cookies();
     private static user: User | null = null;
     
     // user logins
-    static async loginUser(email: string, password: string) {
-        // login user
+    static async loginUser(email: string, password: string): Promise<User | Response | undefined> {
+        try {
+            const res = await fetch(`${LOCAL}/api/login`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ email, password }),
+            });
 
+            if (res.ok) {
+                const data: LoginResponse = await res.json();
 
-        // if user is logged in, set user
-        UserController.user = {
-            id: null, // null for now
-            email: email,
-            username: "", // username is empty for now, will update after fetching
-            friends: [] // friends is empty for now, will update after fetching
-        };
+                this.userCookie.set('user', JSON.stringify(data.data));
+
+                return data.data;
+            } else {
+                console.log(`Error Logging In: ${res.statusText}`)
+                return res;
+            }
+            
+        } catch (error) {
+            console.log(`Error Logging In: ${error}`)
+        }
     };
 
-    // user registers
-    static async registerUser(email: string, password: string, code: string) {
-        // register user
+    // user signup
+    static async signup(email: string, password: string, authCode: string): Promise<Response | undefined> {
+        try {
+            const res = await fetch(`${LOCAL}/api/signup`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ email, password, authCode }),
+            });
+
+            if (!res.ok) {
+                console.log(`Error Signing Up: ${res.statusText}`)
+            }
+            return res;
+
+        } catch (error) {
+            console.log(`Error Signing Up: ${error}`)
+        }
     };
 
+    // TODO: Remove this shit and use cookies/storage
     // get user information
     static getUser() {
-        return UserController.user;
+        return this.userCookie.get('user');
     };
 
     static setUser(user: User) {

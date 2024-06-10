@@ -15,6 +15,9 @@
 # TODO
 /TODO
 
+# dev constants
+/app/constants.ts
+
 # next.js
 /.next/
 /out/
