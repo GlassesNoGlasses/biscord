@@ -1,11 +1,13 @@
 
 // Controls user information and actions
 import { User } from "../interfaces/User";
-import { PORT, LOCAL } from "../constants";
-import { LoginResponse, SignUpResponse } from "../interfaces/ServerResponse";
+import { LOCAL } from "../constants";
+import { LoginResponse } from "../interfaces/ServerResponse";
+import { cookies } from "next/headers";
 
 export default class UserController {
 
+    private static userCookie = cookies();
     private static user: User | null = null;
     
     // user logins
@@ -21,6 +23,9 @@ export default class UserController {
 
             if (res.ok) {
                 const data: LoginResponse = await res.json();
+
+                this.userCookie.set('user', JSON.stringify(data.data));
+
                 return data.data;
             } else {
                 console.log(`Error Logging In: ${res.statusText}`)
@@ -56,7 +61,7 @@ export default class UserController {
     // TODO: Remove this shit and use cookies/storage
     // get user information
     static getUser() {
-        return UserController.user;
+        return this.userCookie.get('user');
     };
 
     static setUser(user: User) {

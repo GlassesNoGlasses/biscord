@@ -43,10 +43,9 @@ export default function Page() {
                 setFeedback('Invalid Credentials');
                 return;
             } else if (res instanceof Response) {
-                setFeedback('Server Error');
-                console.log(res);
+                setFeedback('Unable to login at this time. Please try again later.');
             } else {
-                console.log(res);
+                
             }
         })
 

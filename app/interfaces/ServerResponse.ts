@@ -6,7 +6,3 @@ export interface LoginResponse {
     error?: string;
 };
 
-export interface SignUpResponse {
-    message?: string;
-    error?: string;
-};
