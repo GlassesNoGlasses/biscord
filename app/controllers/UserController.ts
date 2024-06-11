@@ -1,14 +1,14 @@
 
 // Controls user information and actions
 import { User } from "../interfaces/User";
-import { LOCAL } from "../constants";
+import { LOCAL, DAY } from "../constants";
 import { LoginResponse } from "../interfaces/ServerResponse";
 import { cookies } from "next/headers";
 
 export default class UserController {
 
-    private static userCookie = cookies();
-    private static user: User | null = null;
+    // private static userCookie = cookies();
+    private static user: User | undefined = undefined;
     
     // user logins
     static async loginUser(email: string, password: string): Promise<User | Response | undefined> {
@@ -24,7 +24,9 @@ export default class UserController {
             if (res.ok) {
                 const data: LoginResponse = await res.json();
 
-                this.userCookie.set('user', JSON.stringify(data.data));
+                if (data.data) {
+                    this.setUser(data.data);
+                }
 
                 return data.data;
             } else {
@@ -58,25 +60,40 @@ export default class UserController {
         }
     };
 
-    // TODO: Remove this shit and use cookies/storage
+    // update user information
+    static async updateUser(user: User): Promise<Response | undefined> {
+        try {
+            const res = await fetch(`${LOCAL}/api/updateUser/${user.id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({username: user.username, description: user.description}),
+            });
+
+            if (!res.ok) {
+                console.log(`Error Updating User: ${res.statusText}`)
+            }
+            return res;
+
+        } catch (error) {
+            console.log(`Error Updating User: ${error}`)
+        }
+    }
+
+    // TODO: Update this when backend is ready & authentification is implemented
     // get user information
     static getUser() {
-        return this.userCookie.get('user');
+        return this.user;
     };
 
+    // sets user cookie
     static setUser(user: User) {
-        UserController.user = user;
+        this.user = user;
     }
 
     // user logouts
     static async logoutUser() {
-
-        // reset user information
-        UserController.user = {
-            id: null,
-            email: "",
-            username: "",
-            friends: []
-        };
-    };
+        this.user = undefined;
+    }
 }

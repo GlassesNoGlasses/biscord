@@ -41,8 +41,8 @@ export const FriendList = ({
             className='flex w-full text-black text-sm justify-center rounded-lg'/>
         </div>
             {
-                filteredUsers.map((friend: User) => {
-                    return <UserIcon user={friend} callback={() => handleSelect(friend)}/>
+                filteredUsers.map((friend: User, index: number) => {
+                    return <UserIcon user={friend} key={index} callback={() => handleSelect(friend)}/>
                 })
             }
     </div>

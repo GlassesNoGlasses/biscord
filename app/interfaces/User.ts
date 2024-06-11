@@ -1,8 +1,8 @@
 
 export interface User {
-    id: number | null,
+    id: number,
     email: string;
     username: string;
-    description?: string;
+    description: string;
     friends: User[];
 }

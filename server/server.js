@@ -93,3 +93,21 @@ app.post('/api/signup', (req, res) => {
     res.send({message: 'User created successfully'});
 });
 
+app.put('/api/updateUser/:id', (req, res) => {
+    const id = req.params.id;
+    const {username, description} = req.body;
+
+    const user = getUser(id);
+
+    if (!user) {
+        return res.status(404).send({error: 'User not found'});
+    }
+
+    user.username = username;
+    user.description = description;
+
+    console.log(user);
+
+    res.send({message: 'User updated successfully', data: user});
+})
+
