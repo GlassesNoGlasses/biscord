@@ -60,6 +60,27 @@ export default class UserController {
         }
     };
 
+    // update user information
+    static async updateUser(user: User): Promise<Response | undefined> {
+        try {
+            const res = await fetch(`${LOCAL}/api/updateUser/${user.id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({username: user.username, description: user.description}),
+            });
+
+            if (!res.ok) {
+                console.log(`Error Updating User: ${res.statusText}`)
+            }
+            return res;
+
+        } catch (error) {
+            console.log(`Error Updating User: ${error}`)
+        }
+    }
+
     // TODO: Update this when backend is ready & authentification is implemented
     // get user information
     static getUser() {

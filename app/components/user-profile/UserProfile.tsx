@@ -3,6 +3,7 @@
 import React, { useState } from 'react'
 import { UserProfileProps } from './UserProfileProps'
 import { UserIcon } from '../user-icon/UserIcon'
+import UserController from '@/app/controllers/UserController'
 
 export const UserProfile = ({
     user
@@ -15,7 +16,10 @@ export const UserProfile = ({
     // Form submit handler
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        console.log(`username: ${username}, description: ${description}`);
+        
+        UserController.updateUser({...user, username: username, description: description}).then((res: Response | undefined) => {
+            console.log(res);
+        })
     }
 
   return (
@@ -37,7 +41,7 @@ export const UserProfile = ({
                         type='text'
                         id='username'
                         placeholder={`Current: ${user.username}`}
-                        value={""}
+                        value={username}
                         onChange={(e) => setUsername(e.target.value)}
                         className='flex w-[90%] text-black text-sm justify-center rounded-lg'/>
                     </div>
@@ -47,7 +51,7 @@ export const UserProfile = ({
                         type='text'
                         id='description'
                         placeholder={`Current: ${user.description}`}
-                        value={""}
+                        value={description}
                         onChange={(e) => setDescription(e.target.value)}
                         className='flex w-[90%] text-black text-sm justify-center rounded-lg'/>
                     </div>
