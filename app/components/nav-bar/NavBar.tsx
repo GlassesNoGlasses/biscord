@@ -20,7 +20,7 @@ export const NavBar = ({
         // check if a user is already logged in
         const user = UserController.getUser()
 
-        setIsLoggedIn(user !== null)
+        setIsLoggedIn(user !== undefined)
     }, [])
 
   return (
