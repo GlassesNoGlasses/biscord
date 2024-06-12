@@ -32,17 +32,20 @@ export const ImageUpload = ({
 
   return (
     <div className='flex flex-row h-full w-full'>
-        <label htmlFor='image-upload-input' className='flex h-full w-full justify-center'>
-            {children}
+        <label htmlFor='image-upload-input' className='flex h-fit w-fit justify-center cursor-pointer hover:brightness-125'>
+            {children} 
         </label>
 
-        <input
-        type="file"
-        id='image-upload-input'
-        accept="image/*"
-        className='hidden invisible'
-        onChange={ImageUploadHandler}
-        />
+        <form className='hidden' method="POST" encType="multipart/form-data">
+            <input
+            type="file"
+            name='profile-picture'
+            id='image-upload-input'
+            accept="image/*"
+            className='hidden invisible'
+            onChange={ImageUploadHandler}
+            />
+        </form>
     </div>
   );
 }

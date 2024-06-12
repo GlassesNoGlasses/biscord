@@ -5,4 +5,5 @@ export interface User {
     username: string;
     description: string;
     friends: User[];
+    profilePicture?: File;
 }

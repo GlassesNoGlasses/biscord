@@ -5,6 +5,8 @@ import { UserProfileProps } from './UserProfileProps'
 import UserController from '@/app/controllers/UserController'
 import { ImageUpload } from '../image-upload/ImageUpload'
 import { DefaultPicture } from '../default-profile-picture/DefaultPicture'
+import { ProfilePicture } from '../profile-picture/ProfilePicture'
+import FileController from '@/app/controllers/FileController'
 
 export const UserProfile = ({
     user
@@ -12,10 +14,12 @@ export const UserProfile = ({
 
     
     // Profile Picture State
-    const [profilePicture, setProfilePicture] = useState<File | null>(null);
+    const [profilePicture, setProfilePicture] = useState<File | undefined>(user.profilePicture);
+    const [newPicture, setNewPicture] = useState<boolean>(false);
     
     const handleImageUpload = (image: File) => {
         setProfilePicture(image);
+        setNewPicture(true);
     }
     
     // Form States
@@ -26,9 +30,18 @@ export const UserProfile = ({
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         
+        // update user information
         UserController.updateUser({...user, username: username, description: description}).then((res: Response | undefined) => {
             console.log(res);
-        })
+        });
+
+        // update profile picture
+        if (profilePicture && newPicture) {
+            console.log("Attempting to update!")
+            FileController.updateProfilePicture(user.id, profilePicture).then((res: Response | undefined) => {
+                console.log(res);
+            })
+        }
     }
 
   return (
@@ -38,8 +51,8 @@ export const UserProfile = ({
                 <ImageUpload callback={handleImageUpload}>
                     {
                         profilePicture ?
-                            <img src={URL.createObjectURL(profilePicture)} alt='profile' className='flex rounded-full h-full w-auto object-cover'/>
-                        : <DefaultPicture styling='rounded-full h-20 w-20'/>
+                            <ProfilePicture picture={profilePicture}/>
+                        : <DefaultPicture styling='h-20 w-20 flex hover:brightness-125'/>
                     }
                 </ImageUpload>
                 <div className='flex h-full w-5/6 items-center pl-2'>
