@@ -2,13 +2,26 @@
 
 import React, { useState } from 'react'
 import { UserProfileProps } from './UserProfileProps'
-import { UserIcon } from '../user-icon/UserIcon'
 import UserController from '@/app/controllers/UserController'
+import { ImageUpload } from '../image-upload/ImageUpload'
+import { DefaultPicture } from '../default-profile-picture/DefaultPicture'
+import { ProfilePicture } from '../profile-picture/ProfilePicture'
+import FileController from '@/app/controllers/FileController'
 
 export const UserProfile = ({
     user
 }: UserProfileProps) => {
 
+    
+    // Profile Picture State
+    const [profilePicture, setProfilePicture] = useState<File | undefined>(user.profilePicture);
+    const [newPicture, setNewPicture] = useState<boolean>(false);
+    
+    const handleImageUpload = (image: File) => {
+        setProfilePicture(image);
+        setNewPicture(true);
+    }
+    
     // Form States
     const [username, setUsername] = useState<string>(user.username);
     const [description, setDescription] = useState<string>(user.description);
@@ -17,18 +30,31 @@ export const UserProfile = ({
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         
+        // update user information
         UserController.updateUser({...user, username: username, description: description}).then((res: Response | undefined) => {
             console.log(res);
-        })
+        });
+
+        // update profile picture
+        if (profilePicture && newPicture) {
+            console.log("Attempting to update!")
+            FileController.updateProfilePicture(user.id, profilePicture).then((res: Response | undefined) => {
+                console.log(res);
+            })
+        }
     }
 
   return (
     <div className='flex h-full w-full bg-gray-700 justify-center align-middle'>
         <div className='flex flex-col h-[90%] w-[90%] bg-gray-800 justify-center align-middle'>
             <div className='flex flex-row h-1/5 w-full bg-inherit'>
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="rounded">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
-                </svg>
+                <ImageUpload callback={handleImageUpload}>
+                    {
+                        profilePicture ?
+                            <ProfilePicture picture={profilePicture}/>
+                        : <DefaultPicture styling='h-20 w-20 flex hover:brightness-125'/>
+                    }
+                </ImageUpload>
                 <div className='flex h-full w-5/6 items-center pl-2'>
                     <span className='flex text-center text-4xl'>{user.username}</span>
                 </div>
