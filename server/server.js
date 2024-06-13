@@ -24,9 +24,22 @@ let users = [
     {id: 3, username: 'user3', email: 'user3@gmail.com', description: 'I am gay', friends: [], profilePicture: null},
 ]
 
+let chatRooms = [
+    {id: 10, users: [users[0], users[1]], messages: []},
+    {id: 11, users: [users[0], users[2]], messages: []}
+]
+
 // dummy helper functions
 const getUser = (id) => {
-    return users.find(user => user.id == id);
+    return users.find(user => user.id === id);
+}
+
+const getChatRoom = (id) => {
+    return chatRooms.find((room) => room.id === id);
+}
+
+const getAllChatRooms = (userID) => {
+    return chatRooms.filter((room) => {return room.users.find((user) => user.id === userID)});
 }
 
 // filter string inputs
@@ -147,7 +160,74 @@ app.post('/api/updatePP/:id', upload.single('profile-picture'), (req, res) => {
 
         user.profilePicture = file;
         console.log(user);
+
+        res.send({message: 'Profile Picture Updated Successfully'});
+    } catch (error) {
+        return res.status(500).json({ error: error.message });
+    }
+});
+
+app.get('/api/fetchMessages/:userID/:chatRoomID', (req, res) => {
+    try {
+        const chatRoomID = req.params.chatRoomID;
+        const userID = req.params.userID;
         
+        const user = getUser(userID);
+        const chatRoom = getChatRoom(chatRoomID);
+
+        if (!user) {
+            return res.status(401).send({error: 'Unauthenticated User'})
+        };
+
+        if (!chatRoom) {
+            return res.status(404).send({error: 'Invalid Chat Room'});
+        };
+
+        res.send({data: chatRoom.messages});
+    } catch (error) {
+        return res.status(500).json({ error: error.message });
+    }
+});
+
+app.get('/api/fetchAllChatRooms/:userID', (req, res) => {
+    try {
+        const userID = req.params.userID;
+        const user = getUser(userID);
+
+        if (!user) {
+            return res.status(401).send({error: 'Unauthenticated User'})
+        };
+
+        const chatRooms = getAllChatRooms(userID)
+
+        if (!chatRooms) {
+            return res.status(404).send({error: 'Invalid Chat Room'});
+        };
+
+        res.send({data: chatRooms});
+    } catch (error) {
+        return res.status(500).json({ error: error.message });
+    }
+})
+
+app.post('/api/updateMessages/:chatRoomID', (req, res) => {
+    try {
+        const chatRoomID = req.params.chatRoomID;
+        const {messages} = req.body;
+        const chatRoom = getChatRoom(chatRoomID);
+
+        if (!messages) {
+            return res.status(400).send({error: 'Invalid Messages Recieved'});
+        }
+
+        if (!chatRoom) {
+            return res.status(404).send({error: 'Invalid Chat Room'});
+        };
+
+        chatRoom.messages = messages;
+        console.log(chatRoom);
+        
+        res.send({message: `Messages Saved!`});
     } catch (error) {
         return res.status(500).json({ error: error.message });
     }

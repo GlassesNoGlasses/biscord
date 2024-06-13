@@ -6,7 +6,7 @@ import { Message } from '@/app/interfaces/Message';
 import { MessageDisplay } from '../message-display/MessageDisplay';
 
 export const Chat = ({
-    sessionID,
+    room,
     prevMessages,
     friends,
     user,

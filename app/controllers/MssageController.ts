@@ -1,42 +1,59 @@
 
-
-// Controls user information and actions
-import { User } from "../interfaces/User";
 import { LOCAL } from "../constants";
-import { LoginResponse } from "../interfaces/ServerResponse";
-import { cookies } from "next/headers";
+import { ChatRoom } from "../interfaces/ChatRoom";
 import { Message } from "../interfaces/Message";
-import UserController from "./UserController";
-
+import { FetchChatMessagesResponse } from "../interfaces/ServerResponse";
 export default class MessageController {
 
-    static async getUserMessages(): Promise<Message[] | undefined> {
+    static async getChatMessages(userID: number, chatRoomID: number): Promise<Message[] | undefined> {
         try {
-            const user = UserController.getUser();
-
-            if (!user) {
-                return undefined;
+            if (!userID || !chatRoomID) {
+                return;
             }
 
-            // const res = await fetch(`${LOCAL}/api/messages`, {
-            //     method: 'GET',
-            //     headers: {
-            //         'Content-Type': 'application/json',
-            //     },
-            // });
+            const res = await fetch(`${LOCAL}/api/fetchMessages/${userID}/${chatRoomID}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
 
-            // if (res.ok) {
-            //     const data: Message[] = await res.json();
+            if (res.ok) {
+                const data: FetchChatMessagesResponse = await res.json();
 
-            //     return data;
-            // } else {
-            //     console.log(`Error Getting Messages: ${res.statusText}`)
-            // }
+                return data.data;
+            } else {
+                console.log(`Error Getting Messages: ${res.statusText}`)
+                return;
+            }
             
         } catch (error) {
-            // console.log(`Error Getting Messages: ${error}`)
+            console.log(`Error Getting Messages: ${error}`)
         }
+    };
 
+    static async updateMessages(chatRoom: ChatRoom): Promise<Response | undefined> {
+        try {
+            if (!chatRoom || chatRoom.ID || chatRoom.messages) {
+                return;
+            }
+
+            const res = await fetch(`${LOCAL}/api/updateMessages/${chatRoom.ID}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(chatRoom.messages),
+            });
+
+            if (res.ok) {
+                return res; 
+            }
+
+            console.log(`Error Updating Messages: ${res.statusText}`)
+        } catch (error) {
+            console.log(`Error Updating Messages: ${error}`)
+        }
     }
 }
 
