@@ -6,7 +6,7 @@ const multer = require('multer');
 const PORT = 8080;
 const TEN_MB = 10000000;
 
-const upload = multer({'limits': {'files': 5}});
+const upload = multer({'limits': {'files': 5, 'fileSize': TEN_MB}});
 
 app.use(express.json());
 app.use(cors());
@@ -19,14 +19,27 @@ app.listen(PORT, () => {
 
 // dummy data
 let users = [
-    {id: 1, username: 'user1', email: 'user1@gmail.com', description: 'I am gay', friends: [], profilePicture: null},
-    {id: 2, username: 'user2', email: 'user2@gmail.com', description: 'I am gay', friends: [], profilePicture: null},
-    {id: 3, username: 'user3', email: 'user3@gmail.com', description: 'I am gay', friends: [], profilePicture: null},
+    {id: 1, username: 'ABCD', email: 'test@gmail.com', description: 'This is a test user', friends: [], profilePicture: null},
+    {id: 2, username: 'Alex', email: 'alex@gmail.com', description: 'I am gay', friends: [], profilePicture: null},
+    {id: 3, username: 'Bigger Nerd', email: 'nerd@gmail.com', description: 'Im a bigger nerd', friends: [], profilePicture: null},
+];
+
+let chatRooms = [
+    {id: 10, name: '', users: [users[0], users[1]], messages: [], type: 'PRIVATE'},
+    {id: 11, name: '', users: [users[0], users[2]], messages: [], type: 'PRIVATE'},
 ]
 
 // dummy helper functions
 const getUser = (id) => {
-    return users.find(user => user.id == id);
+    return users.find((user) => user.id === Number(id));
+}
+
+const getChatRoom = (id) => {
+    return chatRooms.find((room) => room.id === Number(id));
+}
+
+const getAllChatRooms = (userID) => {
+    return chatRooms.filter((room) => {return room.users.find((user) => user.id === Number(userID))});
 }
 
 // filter string inputs
@@ -48,9 +61,9 @@ app.get('/api/getUser/:id', (req, res) => {
             return res.status(404).send({error: 'User not found'});
         }
     
-        res.send({data: user});
+        res.status(200).send({data: user});
     } catch (error) {
-        return res.send(500).json({ error: error.message });
+        return res.status(500).json({ error: error.message });
     }
 });
 
@@ -65,15 +78,19 @@ app.post('/api/login', (req, res) => {
         if (!user) {
             return res.status(404).send({error: 'User not found'});
         }
-    
+
         // TODO: match password with encrypted one in db
         // if (user.password !== password) {
         //     return res.status(401).send('Invalid password');
         // }
+
+        // Manually add friends
     
-        res.send({message: `Successfully Logged in as ${filteredEmail}`, data: user});
+        return res.status(200).send({message: `Successfully Logged in as ${filteredEmail}`,
+            data: {id: user.id, username: user.username, email: user.email, description: user.description, friends: [users[1], users[2]], profilePicture: user.profilePicture}
+        });
     } catch (error) {
-        return res.send(500).json({ error: error.message });
+        return res.status(500).json({ error: error.message });
     }
 });
 
@@ -101,11 +118,9 @@ app.post('/api/signup', (req, res) => {
             friends: []
         });
     
-        console.log(users[users.length - 1]);
-    
-        res.send({message: 'User created successfully'});
+        res.status(200).send({message: 'User created successfully'});
     } catch (error) {
-        return res.status(500).json({ error: error.message });
+        return res.status(200).sendStatus(500).json({ error: error.message });
     }
 });
 
@@ -124,7 +139,7 @@ app.put('/api/updateUser/:id', (req, res) => {
         user.username = username;
         user.description = description;
     
-        res.send({message: 'User updated successfully', data: user});
+        res.status(200).send({message: 'User updated successfully', data: user});
     } catch (error) {
         return res.status(500).json({ error: error.message });
     }
@@ -146,8 +161,75 @@ app.post('/api/updatePP/:id', upload.single('profile-picture'), (req, res) => {
         }
 
         user.profilePicture = file;
-        console.log(user);
+
+        res.status(200).send({message: 'Profile Picture Updated Successfully'});
+    } catch (error) {
+        return res.status(500).json({ error: error.message });
+    }
+});
+
+app.get('/api/fetchMessages/:userID/:chatRoomID', (req, res) => {
+    try {
+        const chatRoomID = req.params.chatRoomID;
+        const userID = req.params.userID;
         
+        const user = getUser(userID);
+        const chatRoom = getChatRoom(chatRoomID);
+
+        if (!user) {
+            return res.status(401).send({error: 'Unauthenticated User'})
+        };
+
+        if (!chatRoom) {
+            return res.status(404).send({error: 'Invalid Chat Room'});
+        };
+
+        res.status(200).send({data: chatRoom.messages});
+    } catch (error) {
+        return res.status(500).json({ error: error.message });
+    }
+});
+
+app.get('/api/fetchAllChatRooms/:userID', (req, res) => {
+    try {
+        const userID = req.params.userID;
+        const user = getUser(userID);
+
+        if (!user) {
+            return res.status(401).send({error: 'Unauthenticated User'})
+        };
+
+        const chatRooms = getAllChatRooms(userID)
+
+        if (!chatRooms) {
+            return res.status(404).send({error: 'Invalid Chat Room'});
+        };
+
+        res.status(200).send({data: chatRooms});
+    } catch (error) {
+        return res.status(500).json({ error: error.message });
+    }
+})
+
+app.post('/api/updateMessages/:chatRoomID', (req, res) => {
+    try {
+        const chatRoomID = req.params.chatRoomID;
+        const {messages} = req.body;
+        
+        if (!messages) {
+            return res.status(400).send({error: 'Invalid Messages Recieved'});
+        }
+            
+        const chatRoom = getChatRoom(chatRoomID);
+        
+        if (!chatRoom) {
+            return res.status(404).send({error: 'Invalid Chat Room'});
+        };
+
+        chatRoom.messages = messages;
+        console.log(chatRoom);
+        
+        res.status(200).send({message: `Messages Saved!`});
     } catch (error) {
         return res.status(500).json({ error: error.message });
     }

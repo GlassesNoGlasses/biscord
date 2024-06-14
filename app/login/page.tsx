@@ -2,59 +2,38 @@
 
 import Link from "next/link";
 import { NavBar } from "../components/nav-bar/NavBar";
-import { LinkItem } from "../interfaces/LinkItem";
 import { useState } from "react";
 import UserController from "../controllers/UserController";
 import { User } from "../interfaces/User";
+import { useRouter } from "next/navigation";
 
 
 export default function Page() {
+    const {push} = useRouter();
 
     // Form States
     const [username, setUsername] = useState('');
 	const [password, setPassword] = useState('');
 	const [feedback, setFeedback] = useState('');
 
-    // NavBar Links Test data
-    const testNavs: LinkItem[] = [
-        {
-            title: "Google",
-            href: "google.com",
-            priority: 1
-        },
-        {
-            title: "FaceBook",
-            href: "adsadasd",
-            priority: 2,
-        },
-        {
-            title: "instagram",
-            href: "asdadad",
-            priority: 2
-        }
-    ];
-
     // Form submit handler
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         
-        UserController.loginUser(username, password).then((res): User | Response | undefined => {
+        UserController.loginUser(username, password).then((res): User | undefined => {
             if (!res) {
                 setFeedback('Invalid Credentials');
                 return;
-            } else if (res instanceof Response) {
-                setFeedback('Unable to login at this time. Please try again later.');
-            } else {
-                
             }
-        })
 
+            push('/dashboard')
+        })
     }
 
     return (
         <div className="w-screen h-screen">
             <div className="w-full h-fit">
-                <NavBar links={testNavs} loggedIn={false}/>
+                <NavBar links={[]} loggedIn={false}/>
             </div>
             <div className="flex items-center justify-center">
                 <div 

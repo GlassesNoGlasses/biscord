@@ -1,10 +1,8 @@
 
-import { Message } from "@/app/interfaces/Message";
+import { ChatRoom } from "@/app/interfaces/ChatRoom";
 import { User } from "@/app/interfaces/User";
 
 export interface ChatProps {
-    sessionID: number,
-    prevMessages: Message[],
-    friends: User[],
-    user: User | null
+    rooms: ChatRoom[],
+    onRoomSelect: (room: ChatRoom) => void
 }

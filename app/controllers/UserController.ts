@@ -11,7 +11,7 @@ export default class UserController {
     private static user: User | undefined = undefined;
     
     // user logins
-    static async loginUser(email: string, password: string): Promise<User | Response | undefined> {
+    static async loginUser(email: string, password: string): Promise<User | undefined> {
         try {
             const res = await fetch(`${LOCAL}/api/login`, {
                 method: 'POST',
@@ -31,7 +31,6 @@ export default class UserController {
                 return data.data;
             } else {
                 console.log(`Error Logging In: ${res.statusText}`)
-                return res;
             }
             
         } catch (error) {
