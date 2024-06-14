@@ -27,7 +27,9 @@ export const ActiveChatRoom = ({
           {
             messages.map((message, index) => {
               return (
-                <MessageDisplay message={message} index={index}/>
+                <li key={index}>
+                  <MessageDisplay message={message}/>
+                </li>
               )
             })
           }

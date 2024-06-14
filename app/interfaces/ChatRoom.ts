@@ -7,7 +7,7 @@ export enum ChatType {
 }
 
 export interface ChatRoom {
-    ID: number,
+    id: number,
     name: string,
     users: User[],
     messages: Message[],

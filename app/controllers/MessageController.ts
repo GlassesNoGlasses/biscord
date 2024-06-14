@@ -73,18 +73,25 @@ export default class MessageController {
         }
     };
 
-    static async updateMessages(chatRoom: ChatRoom): Promise<Response | undefined> {
+    static async updateMessages(chatRoom: ChatRoom, userID: number): Promise<Response | undefined> {
         try {
-            if (!chatRoom || chatRoom.ID || chatRoom.messages) {
+            if (!chatRoom || !chatRoom.id || !userID) {
                 return;
             }
 
-            const res = await fetch(`${LOCAL}/api/updateMessages/${chatRoom.ID}`, {
+            // invalid user updating the chat room
+            if (!chatRoom.users.find((user: User) => Number(user.id) === userID)) {
+                return;
+            }
+
+            const messages = chatRoom.messages;
+
+            const res = await fetch(`${LOCAL}/api/updateMessages/${chatRoom.id}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(chatRoom.messages),
+                body: JSON.stringify({messages: messages}),
             });
 
             if (res.ok) {

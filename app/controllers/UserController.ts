@@ -21,8 +21,6 @@ export default class UserController {
                 body: JSON.stringify({ email, password }),
             });
 
-            console.log(res);
-
             if (res.ok) {
                 const data: LoginResponse = await res.json();
 

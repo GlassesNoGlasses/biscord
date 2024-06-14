@@ -215,17 +215,19 @@ app.post('/api/updateMessages/:chatRoomID', (req, res) => {
     try {
         const chatRoomID = req.params.chatRoomID;
         const {messages} = req.body;
-        const chatRoom = getChatRoom(chatRoomID);
-
+        
         if (!messages) {
             return res.status(400).send({error: 'Invalid Messages Recieved'});
         }
-
+            
+        const chatRoom = getChatRoom(chatRoomID);
+        
         if (!chatRoom) {
             return res.status(404).send({error: 'Invalid Chat Room'});
         };
 
         chatRoom.messages = messages;
+        console.log(chatRoom);
         
         res.status(200).send({message: `Messages Saved!`});
     } catch (error) {

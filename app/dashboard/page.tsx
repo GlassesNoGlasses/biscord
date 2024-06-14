@@ -57,6 +57,20 @@ export default function Page() {
         }
     }
 
+    useEffect(() => {
+        if (!focusedChatRoom || !user) {
+            return;
+        }
+
+        MessageController.updateMessages(focusedChatRoom, user?.id).then((res: Response | undefined) => {
+            if (!res) {
+                console.log('Error updating messages');
+                return;
+            }
+            console.log(res);
+        })
+    }, [focusedChatRoom])
+
     return (
         <div className="h-screen w-screen">
             <div className="w-full h-fit">
