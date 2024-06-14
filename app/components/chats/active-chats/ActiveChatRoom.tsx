@@ -1,26 +1,22 @@
 
 import React from 'react'
-import { ChatProps } from './ChatProps'
-import { ChatBox } from './chatbox/ChatBox'
 import { Message } from '@/app/interfaces/Message';
-import { MessageDisplay } from '../message-display/MessageDisplay';
+import { ActiveChatRoomProps } from './ActiveChatRoomProps';
+import { ChatBox } from '../chatbox/ChatBox';
+import { MessageDisplay } from '../../message-display/MessageDisplay';
 
-export const Chat = ({
+export const ActiveChatRoom = ({
     room,
-    prevMessages,
-    friends,
     user,
-}: ChatProps) => {
+    callback
+}: ActiveChatRoomProps) => {
 
-  // states
-  const [messages, setMessages] = React.useState<Message[]>(
-    prevMessages.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()));
+  // sort messages by latest date
+  const messages = room.messages.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
   // update messages when sending new message
   const updateMessages = (newMessage: Message) => {
-    console.log(newMessage);
-
-    setMessages([...messages, newMessage]);
+    callback(newMessage);
   }
   
 
@@ -31,7 +27,7 @@ export const Chat = ({
           {
             messages.map((message, index) => {
               return (
-                <MessageDisplay message={message} key={index}/>
+                <MessageDisplay message={message} index={index}/>
               )
             })
           }
@@ -40,7 +36,7 @@ export const Chat = ({
       <div className='flex h-1/6 w-full bg-slate-800 align-bottom justify-center'>
         <ChatBox
         lastMessageID={messages.length > 0 ? messages[messages.length - 1].id : -1}
-        receiver={friends.length > 1 ? 'everyone' : friends[0].username}
+        receiver={room.type === 'PRIVATE' ? room.name : 'everyone'}
         sender={user ? user.username : ''}
         callback={updateMessages}
         />

@@ -5,55 +5,57 @@ import { User } from "../interfaces/User"
 import UserController from "../controllers/UserController";
 import { NavBar } from "../components/nav-bar/NavBar";
 import { FriendList } from "../components/friend-list/FriendList";
-import { Chat } from "../components/chats/Chat";
 import { UserProfile } from "../components/user-profile/UserProfile";
+import { ActiveChatRoom } from "../components/chats/active-chats/ActiveChatRoom";
+import { Chats } from "../components/chats/Chats";
+import { ChatRoom, ChatType } from "../interfaces/ChatRoom";
+import MessageController from "../controllers/MessageController";
+import { redirect } from "next/navigation";
+import { Message } from "../interfaces/Message";
 
 
 // dashboard page
 export default function Page() {
 
     useEffect(() => {
+        // get current user
         const currentUser = UserController.getUser();
-        console.log(currentUser);
-    }, [])
 
-     // no backend yet, so store user in local class
-     const testUser: User = {
-        id: 1,
-        email: "test@gmail.com",
-        username: "ABCD",
-        description: "This is a test user",
-        friends: []
-    };
-
-    const testFriends: User[] = [
-        {
-            id: 2,
-            email: "alex@gmai.com",
-            username: "Alex",
-            description: "I'm Gay",
-            friends: [testUser]
-        },
-        
-        {
-            id: 3,
-            email: "Bigger Nerd",
-            username: "Nerd",
-            description: "I'm a bigger nerd",
-            friends: [testUser]
+        // if successful login and fetch
+        if (currentUser) {
+            // set current user
+            setUser(currentUser);
+            
+            // get chats
+            MessageController.getAllChatRooms(currentUser).then((rooms: ChatRoom[] | undefined) => {
+                if (rooms) {
+                    setChats(rooms);
+                }
+            })
+        } else {
+            // redirect to login if no user found
+            redirect('/login');
         }
-    ];
-
-    testUser.friends = testFriends;
-
+    }, [])
+    
     // states
-    const [user, setUser] = useState<User>(testUser);
-    const [focusedUser, setFocusedUser] = useState<User | null>(null);
+    const [user, setUser] = useState<User | undefined>(undefined);
+    const [chats, setChats] = useState<ChatRoom[]>([]);
+    const [focusedChatRoom, setFocusedChatRoom] = useState<ChatRoom | null>(null);
 
-    // handle user selection
-    const handleSelect = (friend: User) => {
-        setFocusedUser(friend);
+    // handle changing chat rooms
+    const handleRoomSelect = (room: ChatRoom) => {
+        setFocusedChatRoom(room);
     };
+
+    // callback for updating message states
+    const updateMessages = (newMessage: Message): void => {
+        if (focusedChatRoom) {
+            const updatedRoom = {...focusedChatRoom};
+            updatedRoom.messages.push(newMessage);
+            setFocusedChatRoom(updatedRoom);
+        }
+    }
 
     return (
         <div className="h-screen w-screen">
@@ -63,24 +65,22 @@ export default function Page() {
             <div className="w-full h-full flex flex-row">
                 <div className="flex h-full w-1/4">
                     {
-                        user ?
-                        <FriendList friends={user.friends} handleSelect={handleSelect}/>
+                        user && chats.length > 0 ?
+                        <Chats rooms={chats} onRoomSelect={handleRoomSelect}/>
                         : <></>
                     }
                 </div>
                 <div className="flex h-full w-3/4 bg-zinc-300">
                     {
-                        focusedUser ?
+                        focusedChatRoom ?
 
-                        <Chat
-                        friends={[focusedUser]}
+                        <ActiveChatRoom
+                        room={focusedChatRoom}
                         user={user}
-                        sessionID={1}
-                        prevMessages={[]}
+                        callback={updateMessages}
                         />
 
-                        :
-                        <UserProfile user={user}/>
+                        : user ? <UserProfile user={user}/> : <></>
                     }
                 </div>
             </div>
